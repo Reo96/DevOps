@@ -2,10 +2,15 @@ FROM jenkins/jenkins:lts
 
 USER root
 
-RUN apt-get update && \
-    apt-get install -y docker.io
+# Install docker CLI
+RUN apt-get update && apt-get install -y docker.io
 
-# Optional: Allow Jenkins user access to Docker (alternative to root)
-# RUN groupadd docker && usermod -aG docker jenkins
+# Install docker-compose
+RUN curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
+  -o /usr/local/bin/docker-compose && \
+  chmod +x /usr/local/bin/docker-compose
+
+# Give Jenkins user Docker permissions
+RUN usermod -aG docker jenkins
 
 USER jenkins
