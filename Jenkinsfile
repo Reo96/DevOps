@@ -1,18 +1,18 @@
 pipeline {
-  agent any
+    agent any
 
-  stages {
-    stage('Clone') {
-      steps {
-        git 'https://github.com/Reo96/DevOps.git'
-      }
-    }
+    stages {
+        stage('Clone Repo') {
+            steps {
+                git 'https://github.com/Reo96/DevOps'  // or your actual repo
+            }
+        }
 
-    stage('Build & Deploy') {
-      steps {
-        sh 'docker-compose down'
-        sh 'docker-compose up -d --build'
-      }
+        stage('Build and Deploy with Docker Compose') {
+            steps {
+                sh 'docker compose down'
+                sh 'docker compose up -d --build'
+            }
+        }
     }
-  }
 }
