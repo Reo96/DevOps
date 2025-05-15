@@ -10,6 +10,8 @@ pipeline {
 
         stage('Build and Run') {
             steps {
+                sh 'docker --version'
+                sh 'docker-compose --version'
                 sh 'docker-compose down'
                 sh 'docker-compose up -d --build'
             }
