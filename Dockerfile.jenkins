@@ -2,9 +2,10 @@ FROM jenkins/jenkins:lts
 
 USER root
 
-# Install Docker CLI to interact with Docker daemon remotely
+# Install docker CLI and docker-compose
 RUN apt-get update && \
-    apt-get install -y docker.io && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install -y docker.io curl && \
+    curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && \
+    chmod +x /usr/local/bin/docker-compose
 
 USER jenkins
