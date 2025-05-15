@@ -3,14 +3,9 @@ FROM jenkins/jenkins:lts
 USER root
 
 # Install Docker CLI
-RUN apt-get update && apt-get install -y docker.io
-
-# Install Docker Compose v2
-RUN curl -SL https://github.com/docker/compose/releases/download/v2.36.0/docker-compose-linux-x86_64 -o /usr/local/bin/docker-compose \
-  && chmod +x /usr/local/bin/docker-compose
-
-# Add Docker group (if not exists) and add jenkins user
-RUN groupadd -f docker \
-  && usermod -aG docker jenkins
+RUN apt-get update && \
+    apt-get install -y docker.io docker-compose && \
+    usermod -aG docker jenkins && \
+    chmod 666 /var/run/docker.sock
 
 USER jenkins
