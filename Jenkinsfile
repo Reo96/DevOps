@@ -1,31 +1,28 @@
 pipeline {
-  agent any
-
-  environment {
-    DOCKER_BUILDKIT = '1'
-    COMPOSE_DOCKER_CLI_BUILD = '1'
-  }
-
-  stages {
-    stage('Clone Repo') {
-      steps {
-        echo 'Repository cloned by Jenkins'
-      }
+    agent any
+    stages {
+        stage('Checkout SCM') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Clone Repo') {
+            steps {
+                echo 'Repository cloned by Jenkins'
+            }
+        }
+        stage('Build and Run') {
+            steps {
+                sh 'docker --version'
+                sh 'docker-compose --version'
+                sh 'docker-compose down'
+                sh 'docker-compose up -d --build'
+            }
+        }
+        stage('Verify') {
+            steps {
+                echo 'Verify stage'
+            }
+        }
     }
-
-    stage('Build and Run') {
-      steps {
-        sh 'docker --version'
-        sh 'docker-compose --version'
-        sh 'docker-compose down'
-        sh 'docker-compose up -d --build'
-      }
-    }
-
-    stage('Verify') {
-      steps {
-        sh 'docker ps'
-      }
-    }
-  }
 }
