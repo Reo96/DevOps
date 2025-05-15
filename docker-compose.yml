@@ -37,12 +37,13 @@ services:  # Defines the containers we'll create
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock  # Allow access to host Docker
-      - .:/app  # Mount your full project (so Jenkins can see docker-compose.yml)
+      - /var/run/docker.sock:/var/run/docker.sock  # Allow Jenkins to access Docker
+      - .:/app  # Your full project directory, including Jenkinsfile and docker-compose.yml
     environment:
       - DOCKER_HOST=unix:///var/run/docker.sock
     stdin_open: true
     tty: true
+    user: root  # ✅ THIS is the fix: allow Jenkins container to run as root
 volumes:  # Declares persistent volumes
   mongodb_data:  # Named volume for MongoDB data persistence
   jenkins_home:  # Named volume for Jenkins data persistence
