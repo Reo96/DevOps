@@ -1,49 +1,21 @@
-version: '3.8'
-
 services:
-  mongodb:
-    image: mongo:6.0
+  frontend:
+    build: ./frontend
     ports:
-      - "27017:27017"
-    volumes:
-      - mongodb_data:/data/db
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: password
+      - "3000:3000"
+    depends_on:
+      - backend
 
   backend:
     build: ./backend
     ports:
       - "5000:5000"
-    environment:
-      - MONGO_URI=mongodb://admin:password@mongodb:27017/auth-demo?authSource=admin
     depends_on:
-      - mongodb
-
-  frontend:
-    build: ./frontend
-    ports:
-      - "5173:5173"
+      - mongo
     environment:
-      - NODE_ENV=development
-    stdin_open: true
-    tty: true
+      - MONGO_URI=mongodb://mongo:27017/mydb
 
-  jenkins:
-    build:
-      context: .
-      dockerfile: Dockerfile.jenkins
+  mongo:
+    image: mongo
     ports:
-      - "8080:8080"
-      - "50000:50000"
-    volumes:
-      - jenkins_home:/var/jenkins_home
-      - .:/app
-    environment:
-      - DOCKER_HOST=tcp://host.docker.internal:2375
-    stdin_open: true
-    tty: true
-
-volumes:
-  mongodb_data:
-  jenkins_home:
+      - "27017:27017"
