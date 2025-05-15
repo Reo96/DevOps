@@ -4,14 +4,16 @@ pipeline {
     stages {
         stage('Clone Repo') {
             steps {
-                git 'https://github.com/Reo96/DevOps'  // or your actual repo
+                echo 'Cloning GitHub Repo'
+                checkout scm
             }
         }
 
-        stage('Build and Deploy with Docker Compose') {
+        stage('Build & Deploy Containers') {
             steps {
-                sh 'docker compose down'
-                sh 'docker compose up -d --build'
+                echo 'Building Docker Containers...'
+                sh 'docker-compose down'
+                sh 'docker-compose up -d --build'
             }
         }
     }
