@@ -1,23 +1,23 @@
-version: '3.8'  # Specifies Docker Compose file format version
+version: '3.8'
 
-services:  # Defines the containers we'll create
-  mongodb:  # Our database service
-    image: mongo:6.0  # Uses official MongoDB image version 6.0
+services:
+  mongodb:
+    image: mongo:6.0
     ports:
-      - "27017:27017"  # Maps host port 27017 to container port 27017
+      - "27017:27017"
     volumes:
-      - mongodb_data:/data/db  # Persistent storage for database files
-    environment:  # Sets default admin credentials
+      - mongodb_data:/data/db
+    environment:
       MONGO_INITDB_ROOT_USERNAME: admin
       MONGO_INITDB_ROOT_PASSWORD: password
 
-  backend:  # Node.js API service
-    build: ./backend  # Builds from backend/Dockerfile
+  backend:
+    build: ./backend
     ports:
-      - "5000:5000"  # Exposes backend API on port 5000
+      - "5000:5000"
     environment:
-      - MONGO_URI=mongodb://admin:password@mongodb:27017/auth-demo?authSource=admin  # Connection string
-    depends_on:  # Ensures MongoDB starts first
+      - MONGO_URI=mongodb://admin:password@mongodb:27017/auth-demo?authSource=admin
+    depends_on:
       - mongodb
 
   frontend:
@@ -26,8 +26,9 @@ services:  # Defines the containers we'll create
       - "5173:5173"
     environment:
       - NODE_ENV=development
-    stdin_open: true  # Enables interactive mode
-    tty: true         # Allocates pseudo-TTY
+    stdin_open: true
+    tty: true
+
   jenkins:
     build:
       context: .
@@ -37,12 +38,12 @@ services:  # Defines the containers we'll create
       - "50000:50000"
     volumes:
       - jenkins_home:/var/jenkins_home
-      - /var/run/docker.sock:/var/run/docker.sock
       - .:/app
     environment:
-      - DOCKER_HOST=unix:///var/run/docker.sock
+      - DOCKER_HOST=tcp://host.docker.internal:2375
     stdin_open: true
     tty: true
-volumes:  # Declares persistent volumes
-  mongodb_data:  # Named volume for MongoDB data persistence
-  jenkins_home:  # Named volume for Jenkins data persistence
+
+volumes:
+  mongodb_data:
+  jenkins_home:
